@@ -1,0 +1,122 @@
+#+title: 0023 Merge K Sorted Lists
+#+link: https://leetcode.com/problems/merge-k-sorted-lists/
+#+tags: linkedlist divideandconquer heap priorityqueue mergesort
+
+You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+Example 1:
+Input: lists = [[1,4,5],[1,3,4],[2,6]]
+Output: [1,1,2,3,4,4,5,6]
+Explanation: The linked-lists are:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+merging them into one sorted list:
+1->1->2->3->4->4->5->6
+
+Example 2:
+Input: lists = []
+Output: []
+
+Example 3:
+Input: lists = [[]]
+Output: []
+
+Constraints:
+k == lists.length
+0 <= k <= 104
+0 <= lists[i].length <= 500
+-104 <= lists[i][j] <= 104
+lists[i] is sorted in ascending order.
+The sum of lists[i].length will not exceed 104.
+
+* Priority Queue (Min Queue)
+
+#+begin_src go
+/**
+ ,* Definition for singly-linked list.
+ ,* type ListNode struct {
+ ,*     Val int
+ ,*     Next *ListNode
+ ,* }
+ ,*/
+
+import "container/heap"
+
+func mergeKLists(lists []*ListNode) *ListNode {
+    // Priority queue initialized to hold the list nodes.
+    minQ := make(PQ, 0)
+    heap.Init(&minQ)
+
+    // Adding the first node of each list to the priority queue.
+	// O(k) TC where k is number of linked lists in lists
+    for _, head := range lists {
+        if head != nil {
+            heap.Push(&minQ, head)
+        }
+    }
+
+    // Creating a dummy node which will help in easily returning the head of the merged list.
+    dummy := &ListNode{}
+    current := dummy
+
+    // Extract nodes from the priority queue and build the merged list.
+    for minQ.Len() > 0 {
+        // Get the node with the smallest value.
+        node := heap.Pop(&minQ).(*ListNode)
+
+        // If there's a next node in the list, add it to the priority queue.
+        if node.Next != nil {
+            heap.Push(&minQ, node.Next)
+        }
+
+        // Link the extracted node to the merged list and move the pointer.
+        current.Next = node
+        current = current.Next
+    }
+
+    return dummy.Next
+}
+
+type PQ []*ListNode
+
+func (pq PQ) Len() int {
+    return len(pq)
+}
+
+func (pq PQ) Less(i, j int) bool {
+    return pq[i].Val < pq[j].Val
+}
+
+func (pq PQ) Swap(i, j int) {
+    pq[i], pq[j] = pq[j], pq[i]
+}
+
+func (pq *PQ) Push(x any) {
+    ,*pq = append(*pq, x.(*ListNode))
+}
+
+func (pq *PQ) Pop() any {
+    item := (*pq)[len(*pq)-1]
+    ,*pq = (*pq)[:len(*pq)-1]
+    return item
+}
+#+end_src
+
+TC:
+- ~O(k)~ for heapify - Heapify is a linear operation. ~pq~ contains ~k~ nodes, which is the number of linked lists in ~lists~.
+- ~O(n * k)~ runs till minQ is empty. This is in the worst case equal to ~k~ times ~n~ where ~n~ is the length of the largest linked list and ~k~ is the number of linked lists.
+  - ~O(log k)~ for pop - since the heap may have to heapify a tree with ~k~ nodes after removing the min root.
+  - ~O(log k)~ for push - since it must maintain the heap property (heapify) after inserting a new element into the heap.
+
+The overall time complexity is ~O(n * k * log k)~. There are ~n * k~ elements and for each element we either push or pop which take ~O(log k)~ time.
+
+SC:
+- The size of the heap determines the SC. The heap can at max hold ~k~ elements, where ~k~ is the number of lists. SC is ~O(k)~.
+
+Note -
+Output Linked List: The space for the output linked list does not count toward the space complexity since space complexity is typically analyzed with respect to additional space required by the algorithm, not including space needed for the output.

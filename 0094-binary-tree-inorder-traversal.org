@@ -1,0 +1,51 @@
+#+title: 0094 Binary Tree Inorder Traversal
+#+link: https://leetcode.com/problems/binary-tree-inorder-traversal/
+#+tags: stack tree depthfirstsearch binarytree
+
+Given the root of a binary tree, return the inorder traversal of its nodes' values.
+
+Example 1:
+
+
+Input: root = [1,null,2,3]
+Output: [1,3,2]
+Example 2:
+
+Input: root = []
+Output: []
+Example 3:
+
+Input: root = [1]
+Output: [1]
+
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 100].
+-100 <= Node.val <= 100
+
+
+Follow up: Recursive solution is trivial, could you do it iteratively?
+
+#+begin_src go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func inorderTraversal(root *TreeNode) []int {
+    if root == nil {
+        return nil
+    }
+
+    var values []int
+    values = append(values, inorderTraversal(root.Left)...)
+    values = append(values, root.Val)
+    values = append(values, inorderTraversal(root.Right)...)
+
+    return values
+}
+#+end_src

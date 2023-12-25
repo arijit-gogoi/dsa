@@ -1,0 +1,60 @@
+#+title: 0438 Find All Anagrams In A String
+#+link: https://leetcode.com/problems/find-all-anagrams-in-a-string/description/
+#+tags: hashtable string slidingwindow
+
+#+begin_src go
+func findAnagrams(s string, p string) (res []int) {
+    if len(s) < len(p) {
+        return res
+    }
+
+    var pFreq, sFreq [26]int
+    for i := 0; i < len(p); i++ {
+        pFreq[p[i] - 97]++
+        sFreq[s[i] - 97]++
+    }
+
+    start := 0
+    for end := len(p); end < len(s); end++ {
+        if pFreq == sFreq {
+            res = append(res, start)
+        }
+        sFreq[s[end] - 97]++
+        sFreq[s[start] - 97]--
+        start++
+    }
+
+    if pFreq == sFreq {
+        res = append(res, start)
+    }
+    return res
+}
+#+end_src
+
+
+#+begin_src go
+func findAnagrams(s string, p string) (res []int) {
+    if len(s) < len(p) {
+        return res
+    }
+    var freq [26]int
+    for i := 0; i < len(p); i++ {
+        freq[p[i] - 97]++
+    }
+    start := 0
+    for end := range s {
+        freq[s[end] - 97]--
+        if freq == [26]int{} {
+            res = append(res, start)
+        }
+		if end >= len(p) - 1 {
+			freq[s[start] - 97]++
+			start++
+		}
+    }
+    if freq == [26]int{} {
+        res = append(res, start)
+    }
+    return res
+}
+#+end_src

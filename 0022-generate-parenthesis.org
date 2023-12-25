@@ -1,0 +1,47 @@
+#+title: 0022 Generate Parenthesis
+
+#+begin_src go
+// recursive dfs
+func generateParenthesis(n int) []string {
+    var res []string
+    var dfs func(left, right int, s string)
+
+    dfs = func(left, right int, s string) {
+        if len(s) == n * 2 {
+            res = append(res, s)
+            return
+        }
+        if left < n {
+            dfs(left + 1, right, s + "(")
+        }
+        if left > right {
+            dfs(left, right + 1, s + ")")
+        }
+    }
+
+    dfs(0, 0, "")
+    return res
+}
+
+// iterative dfs
+func generateParenthesis(n int) []string {
+    var res []string
+    var left, right int
+    q := [][]interface{}{{left, right, ""}}
+    for len(q) > 0 {
+        left, right := q[len(q)-1][0].(int), q[len(q)-1][1].(int)
+        s := q[len(q)-1][2].(string)
+        q = q[:len(q)-1]
+        if len(s) == 2*n {
+            res = append(res, s)
+        }
+        if left < n {
+            q = append(q, []interface{}{left + 1, right, s + "("})
+        }
+        if right < left {
+            q = append(q, []interface{}{left, right + 1, s + ")"})
+        }
+    }
+    return res
+}
+#+end_src

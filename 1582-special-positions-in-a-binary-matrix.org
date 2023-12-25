@@ -1,0 +1,85 @@
+#+title: 1582 Special Positions In A Binary Matrix
+#+link: https://leetcode.com/problems/special-positions-in-a-binary-matrix/
+#+tags: array matrix
+
+Given an ~m x n~ binary matrix ~mat~, return the number of special positions in ~mat~.
+
+A position (i, j) is called special if mat[i][j] == 1 and all other elements in row i and column j are 0 (rows and columns are 0-indexed).
+
+
+
+Example 1:
+Input: mat = [[1,0,0],[0,0,1],[1,0,0]]
+Output: 1
+Explanation: (1, 2) is a special position because mat[1][2] == 1 and all other elements in row 1 and column 2 are 0.
+
+Example 2:
+Input: mat = [[1,0,0],[0,1,0],[0,0,1]]
+Output: 3
+Explanation: (0, 0), (1, 1) and (2, 2) are special positions.
+
+
+Constraints:
+#+begin_example
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 100
+mat[i][j] is either 0 or 1.
+#+end_example
+
+* Sol
+
+#+begin_src go
+func numSpecial(mat [][]int) int {
+    m := len(mat)
+    n := len(mat[0])
+    row_count := make([]int, m)
+    col_count := make([]int, n)
+
+    for row := 0; row < m; row++ {
+        for col := 0; col < n; col++ {
+            if mat[row][col] == 1 {
+                row_count[row] += 1
+                col_count[col] += 1
+            }
+        }
+    }
+
+    special := 0
+    for row := 0; row < m; row++ {
+        for col := 0; col < n; col++ {
+            if mat[row][col] == 1 {
+                if row_count[row] == 1 && col_count[col] == 1 {
+                    special += 1
+                }
+            }
+        }
+    }
+
+    return special
+}
+#+end_src
+
+#+begin_src python
+class Solution:
+    def numSpecial(self, mat: List[List[int]]) -> int:
+        m = len(mat)
+        n = len(mat[0])
+        row_count = [0] * m
+        col_count = [0] * n
+
+        for row in range(m):
+            for col in range(n):
+                if mat[row][col] == 1:
+                    row_count[row] += 1
+                    col_count[col] += 1
+
+        special = 0
+        for row in range(m):
+            for col in range(n):
+                if mat[row][col] == 1:
+                    if row_count[row] == 1 and col_count[col] == 1:
+                        special += 1
+
+        return special
+#+end_src

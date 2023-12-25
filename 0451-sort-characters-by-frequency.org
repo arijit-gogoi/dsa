@@ -1,0 +1,72 @@
+#+title: 0451 Sort Characters By Frequency
+#+link: https://leetcode.com/problems/sort-characters-by-frequency/
+#+tags: hashtable string sorting heap priorityqueue bucketsort counting
+
+Given a string s, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.
+
+Return the sorted string. If there are multiple answers, return any of them.
+
+Example 1:
+Input: s = "tree"
+Output: "eert"
+Explanation: 'e' appears twice while 'r' and 't' both appear once.
+So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+
+Example 2:
+Input: s = "cccaaa"
+Output: "aaaccc"
+Explanation: Both 'c' and 'a' appear three times, so both "cccaaa" and "aaaccc" are valid answers.
+Note that "cacaca" is incorrect, as the same characters must be together.
+
+Example 3:
+Input: s = "Aabb"
+Output: "bbAa"
+Explanation: "bbaA" is also a valid answer, but "Aabb" is incorrect.
+Note that 'A' and 'a' are treated as two different characters.
+
+Constraints:
+1 <= s.length <= 5 * 105
+s consists of uppercase and lowercase English letters and digits.
+
+* Sol
+O(m log m) TC where m is the numeber of unique characters in s. But m is at most n. Hence TC is O(n log n), where n is length of s.
+
+O(n) SC where s is length of s.
+
+#+begin_src go
+func frequencySort(s string) string {
+	// O(n) TC
+    var freq [128]int
+    for _, c := range s {
+        freq[c]++
+    }
+
+
+    count := make([]int, len(freq))
+    for c := range freq {
+        count = append(count, c)
+    }
+	// O(m log m) m is number of unique chars in s
+    sort.Slice(count, func(i, j int) bool {
+        return freq[count[i]] > freq[count[j]]
+    })
+    var result strings.Builder
+	for _, c := range count {
+		result.WriteString(strings.Repeat(string(c), freq[c]))
+	}
+	return result.String()
+}
+#+end_src
+
+#+begin_src python
+class Solution:
+    def frequencySort(self, s: str) -> str:
+        # Count the frequency of each character in the input string
+        char_frequency = Counter(s)
+        # Sort the characters based on frequency in descending order
+        sorted_characters = sorted(char_frequency.items(), key=lambda item: -item[1])
+        # Create a string with characters repeated by their frequency
+        sorted_string = ''.join(ch * freq for ch, freq in sorted_characters)
+
+        return sorted_string
+#+end_src

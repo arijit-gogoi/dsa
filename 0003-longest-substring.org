@@ -1,0 +1,89 @@
+#+title: 0003 Longest Substring Without Repeating Characters
+
+#+begin_src zig
+pub fn lengthOfLongestSubstring(s: []const u8) -> u32 {
+    var frequency: [128]u32 = undefined;
+    var start: usize = 0;
+    var end: usize = 0;
+    var max_length: u32 = 0;
+
+    while (end < s.len) : (end += 1) {
+        frequency[s[end]] += 1;
+
+        while (frequency[s[end]] > 1) : (start += 1) {
+            frequency[s[start]] -= 1;
+        }
+
+        if (end - start + 1) > max_length {
+            max_length = end - start + 1
+        }
+    }
+
+    return max_length;
+}
+#+end_src
+
+#+begin_src rust
+use std::cmp::max;
+
+impl Solution {
+    pub fn length_of_longest_substring(s: String) -> i32 {
+        let mut frequency: [i32; 128] = [0; 128];
+        let (mut start, mut end, mut max_length) = (0, 0, 0);
+
+        for byte in s.bytes() {
+            frequency[byte as usize] += 1;
+
+            while frequency[byte as usize] > 1 {
+                frequency[s.as_bytes()[start] as usize] -= 1;
+                start += 1;
+            }
+
+            max_length = max(max_length, end - start + 1);
+            end += 1;
+        }
+
+        max_length as i32
+    }
+}
+#+end_src
+
+#+begin_src go
+func lengthOfLongestSubstring(s string) int {
+	var frequency [128]int
+    start, end, max_length := 0, 0, 0
+
+    for end < len(s) {
+        frequency[int(s[end])] += 1
+
+        for frequency[int(s[end])] > 1 {
+            frequency[int(s[start])] -= 1
+            start += 1
+        }
+
+        max_length = max(max_length, end - start + 1)
+        end += 1
+    }
+
+    return max_length
+}
+#+end_src
+
+#+begin_src python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        frequency = [0] * 128
+        start, end, max_length = 0, 0, 0
+
+        while end < len(s):
+            frequency[ord(s[end])] += 1
+
+            while frequency[ord(s[end])] > 1:
+                frequency[ord(s[start])] -= 1
+                start += 1
+
+            max_length = max(max_length, end - start + 1)
+            end += 1
+
+        return max_length
+#+end_src
