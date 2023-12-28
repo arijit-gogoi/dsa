@@ -1,0 +1,113 @@
+#+title: 0234 Palindrome Linked List
+#+link: https://leetcode.com/problems/palindrome-linked-list/
+#+tags: linkedlist twopointers stack recursion
+
+Given the head of a singly linked list, return true if it is a
+palindrome or false otherwise.
+
+Example 1:
+Input: head = [1,2,2,1]
+Output: true
+
+Example 2:
+Input: head = [1,2]
+Output: false
+
+Constraints:
+The number of nodes in the list is in the range [1, 105].
+0 <= Node.val <= 9
+
+Follow up: Could you do it in O(n) time and O(1) space?
+
+* Slow and Fast Pointers
+
+#+begin_src go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+    var slow, fast *ListNode
+    slow = head
+    fast = head.Next
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+    var prev, current, next *ListNode
+    current = slow.Next
+    for current != nil {
+        next = current.Next
+        current.Next = prev
+        prev = current
+        current = next
+    }
+    for prev != nil {
+        if prev.Val != head.Val {
+            return false
+        }
+        prev, head = prev.Next, head.Next
+    }
+    return true
+}
+#+end_src
+
+#+begin_src python
+def Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        slow = head
+        fast = head.next
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        prev = None
+        current = slow.next
+        while current:
+            next = current.next
+            current.next = prev
+            prev = current
+            current = next
+
+        while prev:
+            if prev.val != head.val:
+                return False
+            prev, head = prev.next, head.next
+        return True
+#+end_src
+
+TC:
+- first loop -> ~O(n/2)~
+- second loop -> ~O(n/2)~
+- third loop -> ~O(n/2)~
+Overall TC is ~O(n)~.
+SC:
+- ~O(1)~ since no additional data structure is used.
+
+* Using a slice
+
+#+begin_src go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+	listSlice := make([]int, 0)
+	for next := head; next != nil; next = next.Next {
+		listSlice = append(listSlice, next.Val)
+	}
+	for left, right := 0, len(listSlice)-1; left < right; left, right = left+1, right-1 {
+		if listSlice[left] != listSlice[right] {
+			return false
+		}
+	}
+	return true
+}
+#+end_src
