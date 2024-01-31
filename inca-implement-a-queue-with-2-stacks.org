@@ -1,0 +1,48 @@
+#+title: INCA Implement A Queue With 2 Stacks
+#+link: https://www.interviewcake.com/question/python3/queue-two-stacks
+#+tags: queue stack amortised
+
+Q. Implement a Queue using two stacks.
+
+#+begin_src python
+class QueueWithTwoStacks:
+
+    def __init__(self):
+        self.incoming_stack = []
+        self.outgoing_stack = []
+
+    def enqueue(self, item):
+        self.incoming_stack.append(item)
+
+    def dequeue(self, item):
+        if len(self.outgoing_stack) == 0:
+
+            # move items from incoming_stack to outgoing stack
+            while len(self.incoming_stack) > 0:
+                self.outgoing_stack.append(self.incoming_stack.pop())
+
+            # if stack is already empty, raise an error
+            if len(self.outgoing_stack) == 0:
+                raise IndexError("Can't dequeue an empty queue.")
+
+        return self.outgoing_stack.pop()
+
+#+end_src
+
+Each enqueue is ~O(1)~ and so is each dequeue when ~outgoing_stack~ has items.
+
+Dequeue on an empty ~outgoing_stack~ is order of the number of items in ~incoming_stack~ at that moment, which can vary significantly.
+
+Notice that the more expensive a dequeue on an empty ~outgoing_stack~ is (that is, the more items we have to move from ~incoming_stack~ to ~outgoing_stack~), the more ~O(1)~ time dequeues off of a non-empty out_stack it wins us in the future.
+
+Once items are moved from ~incoming_stack~ to ~outgoing_stack~ they just sit there, ready to be dequeued in ~O(1)~ time. An item never moves "backwards" in our data structure.
+
+This "averages out".
+
+In a set of ~m~ enqueues and dequeues the total cost of all dequeues is actually just ~O(m)~. Here we looked at the time cost of each item passing through the queue instead of the time cost of each operation.
+
+So let's look at the worst case for a single item, which is the case where it is enqueued and then later dequeued.
+
+The item enters ~incoming_stack~ (costing 1 push), then later moves to ~outgoing_stack~ (costing 1 pop and 1 push), then later comes off ~outgoing_stack~ to get returned (costing 1 pop).
+
+Each of these 4 pushes and pops is ~O(1)~ time. So our total cost per item is ~O(1)~. Our ~m~ enqueue and dequeue operations put ~m~ or fewer items into the system, giving a total runtime of ~O(m)~.
