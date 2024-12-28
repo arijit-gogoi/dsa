@@ -84,3 +84,19 @@ class Solution:
             m[v] = i
         return []
 #+end_src
+
+#+begin_src rust
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut m = std::collections::HashMap::new();
+
+        for (i, &v) in nums.iter().enumerate() {
+            if let Some(&j) = m.get(&(target - v)) {
+                return vec![i as i32, j as i32]
+            }
+            m.insert(v, i);
+        }
+        vec![]
+    }
+}
+#+end_src
