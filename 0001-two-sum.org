@@ -29,7 +29,10 @@ Constraints:
 Only one valid answer exists.
 
 
-Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
+Follow-up: Can you come up with an algorithm that is less than O(n^2) time complexity?
+
+Follow-up: Can you come up with an algorithm that is less than O(n^2) time complexity?
+
 
 * Brute Force Solution
 O(n^2) TC
@@ -90,13 +93,33 @@ impl Solution {
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
         let mut m = std::collections::HashMap::new();
 
-        for (i, &v) in nums.iter().enumerate() {
-            if let Some(&j) = m.get(&(target - v)) {
-                return vec![i as i32, j as i32]
-            }
-            m.insert(v, i);
+        for (i, v) in nums.iter().enumerate() {
+            match m.get(&(target - v)) {
+                Some(&j) => return vec![i as i32, j];
+                None => m.insert(v, i as i32);
+            };
         }
         vec![]
     }
 }
+#+end_src
+
+#+begin_src c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> map;
+        int N = nums.size();
+
+        for (int i = 0; i < N; i++) {
+            int num = nums[i];
+            int complement = target - num;
+            if (map.contains(complement)) {
+                return {map[complement], i};
+            }
+            map[num] = i;
+        }
+        return {};
+    }
+};
 #+end_src
