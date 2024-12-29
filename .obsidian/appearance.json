@@ -1,0 +1,8 @@
+{
+  "enabledCssSnippets": [
+    "editor-width",
+    "highlight-active-line",
+    "no-blink-cursor-vim-normal",
+    "related-callout"
+  ]
+}

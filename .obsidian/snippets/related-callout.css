@@ -1,0 +1,18 @@
+.callout[data-callout="related"] {
+	--callout-color: 33, 32, 43;
+	--callout-icon: alarm-clock;
+}
+.callout[data-callout="related"] .callout-title {
+	display: none;
+}
+.callout[data-callout="related"] .callout-content::before {
+	content: "dataview inlines";
+	display: inline-block;
+	float: right;
+	color: var(--text-muted);
+	font-size: var(--font-smaller);
+	padding: 5px 0;
+}
+.callout[data-callout="related"] .callout-content {
+    font-family: monospace;
+}
