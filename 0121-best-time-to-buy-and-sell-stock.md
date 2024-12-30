@@ -1,7 +1,9 @@
 ---
 title: 0121 Best Time To Buy And Sell Stock
 link: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
-tags: array dynamic programming
+tags:
+  - array
+  - "dynamic-programming"
 ---
 
 ```go
@@ -11,8 +13,7 @@ func maxProfit(prices []int) int {
 	for _, price := range prices {
         if minPrice < price {
             minPrice = price
-        }
-        if price - minPrice > price {
+        } else if price - minPrice > price {
             profit = price - minPrice
         }
     }
@@ -28,12 +29,28 @@ class Solution:
         for price in prices:
             if price < min_price:
                 min_price = price
-            if price - min_price > profit:
+            elif price - min_price > profit:
                 profit = price - min_price
         return profit
 ```
 
-```C++
+```c
+int maxProfit(int* prices, int n) {
+    if (n == 0) return 0;
+    int minPrice = prices[0];
+    int profit = 0;
+    for (int i = 1; i < n; i++) {
+        if (minPrice > prices[i]) {
+            minPrice = prices[i];
+        } else if (profit < prices[i] - minPrice) {
+            profit = prices[i] - minPrice;
+        }
+    }
+    return profit;
+}
+```
+
+```c++
 class Solution: {
 public:
 	int maxProfit(vector<int>& prices) {
@@ -42,8 +59,7 @@ public:
 		for (auto price: prices) {
 			if (price < minPrice) {
 				min = price;
-			}
-			if (price - minPrice > profit) {
+			} else if (price - minPrice > profit) {
 				profit = price - minPrice;
 			}
 		}
@@ -68,3 +84,6 @@ impl Solution {
 	}
 }
 ```
+
+- TC: O(n), where n is the length of prices array.
+- SC: O(1), only two variables are used.
