@@ -5,6 +5,11 @@ tags:
   - array 
   - counting
 ---
+- This is the Boyer Moore Voting Algorithm.
+- The majority element must appear more than n/2 times.
+- TC: O(n)
+- SC: O(1)
+- It's important to note that if the problem statement didn't guarantee the existence of a majority element, a second pass would be necessary to confirm that our candidate m is indeed the majority by counting its total occurrences in nums and comparing it to n / 2.
 
 ```python
 class Solution:
@@ -97,4 +102,22 @@ impl Solution {
     return winner;
   }
 }
+```
+
+```ts
+function majorityElement(nums: number[]): number {
+    let winner: number = 0;
+    let votesAccumulated: number = 0;
+    for (const n of nums) {
+        if (votesAccumulated == 0) {
+            winner = n;
+        }
+        if (n == winner) {
+            votesAccumulated += 1;
+        } else {
+            votesAccumulated -= 1;
+        }
+    }
+    return winner;
+};
 ```
